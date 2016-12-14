@@ -8,6 +8,7 @@ from oauth2client import tools
 from oauth2client.file import Storage
 
 import datetime
+import pytz
 
 try:
     import argparse
@@ -60,20 +61,28 @@ def main():
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
 
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    now = now.replace("13T", "10T")
-    print(now);
-    print('Getting the upcoming 10 events')
+    remember_hours =1
+    now = datetime.datetime.utcnow()
+    now_1_hour = now+datetime.timedelta(hours=remember_hours)
+    #now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    now = now.isoformat() + 'Z'
+    now_1_hour = now_1_hour.isoformat() +'Z'
     eventsResult = service.events().list(
-        calendarId='g0kqbpppneqn8gisrl0u4u8isdmp949h@import.calendar.google.com', timeMin=now, maxResults=10, singleEvents=True,
+        calendarId='a1nvjeb8qbs6d496aeo84i43r8@group.calendar.google.com', timeMin=now, timeMax=now_1_hour, singleEvents=True,
         orderBy='startTime').execute()
     events = eventsResult.get('items', [])
 
-    if not events:
-        print('No upcoming events found.')
     for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        print(start, event['summary'], event['description'])
+	if 'description' in event:
+	    details = event['description'].split('\n')
+	    for detail in details:
+		detail = detail.strip()
+	        if "Name:" in detail:
+	    	    client= (detail.split(':')[1]).strip()
+		if "Phone:" in detail:
+		    phone= (detail.split(':')[1]).strip()
+	    if 'client' in locals() and 'phone' in locals():
+	        print('{0}:"{1}: Te recordamos que tienes una cita en Piezzo dentro de {2} horas"'.format(phone, client,remember_hours))
 
 
 if __name__ == '__main__':
