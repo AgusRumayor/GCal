@@ -54,24 +54,27 @@ def get_credentials():
 def main():
     """Shows basic usage of the Google Calendar API.
 
-    Creates a Google Calendar API service object and outputs a list of the next
-    10 events on the user's calendar.
     """
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
 
     remember_hours =1
+    #From this time to 1 hour later - 5 minutes (trying avoid duplicates messages
     now = datetime.datetime.utcnow()
-    now_1_hour = now+datetime.timedelta(hours=remember_hours)
+    now_1_hour = now+datetime.timedelta(hours=remember_hours) - datetime.timedelta(minutes=5)
     #now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     now = now.isoformat() + 'Z'
     now_1_hour = now_1_hour.isoformat() +'Z'
-    eventsResult = service.events().list(
-        calendarId='a1nvjeb8qbs6d496aeo84i43r8@group.calendar.google.com', timeMin=now, timeMax=now_1_hour, singleEvents=True,
-        orderBy='startTime').execute()
-    events = eventsResult.get('items', [])
-
+    
+    calendars = ['ad8kj3tgp3udd0unsvrde4p5hc8gs01p@import.calendar.google.com', '84v648v1lo7sp9dqrj8egfe8b6m9qg83@import.calendar.google.com', '30qd3ak2qrk0leu1sjl7rb72jf55r4bt@import.calendar.google.com', '9trsej2tkp3t4jtp51i602ifce6sep2u@import.calendar.google.com']
+    events = []
+    for calendar in calendars:
+    	eventsResult = service.events().list(
+            calendarId=calendar, timeMin=now, timeMax=now_1_hour, singleEvents=True,
+            orderBy='startTime').execute()
+    	events = events + eventsResult.get('items', [])
+    
     for event in events:
 	if 'description' in event:
 	    details = event['description'].split('\n')
@@ -82,7 +85,7 @@ def main():
 		if "Phone:" in detail:
 		    phone= (detail.split(':')[1]).strip()
 	    if 'client' in locals() and 'phone' in locals():
-	        print('{0}:"{1}: Te recordamos que tienes una cita en Piezzo dentro de {2} horas"'.format(phone, client,remember_hours))
+	        print('{0}:"{1}: Te recordamos que tienes una cita en Piezzo dentro de {2} hora"'.format(phone, client,remember_hours))
 
 
 if __name__ == '__main__':
