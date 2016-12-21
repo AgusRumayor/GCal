@@ -61,7 +61,7 @@ def main():
 
     remember_hours =1
     #From this time to 1 hour later - 5 minutes (trying avoid duplicates messages
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.utcnow() + datetime.timedelta(hours=remember_hours)
     now_1_hour = now+datetime.timedelta(hours=remember_hours) - datetime.timedelta(minutes=5)
     #now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     now = now.isoformat() + 'Z'
@@ -89,7 +89,7 @@ def main():
 		if "Phone:" in detail:
 		    phone= (detail.split(':')[1]).strip()
 	    if 'client' in locals() and 'phone' in locals():
-	        print('{0}:"{1}: Te recordamos que tienes una cita en Piezzo dentro de {2} hora"'.format(phone, client,remember_hours))
+	        print('{0}:"{1}: Te recordamos que tienes una cita en Piezzo"'.format(phone, client))
 
 
 if __name__ == '__main__':
