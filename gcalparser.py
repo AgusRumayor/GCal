@@ -89,7 +89,7 @@ def main():
 		if "Phone:" in detail:
 		    phone= (detail.split(':')[1]).strip()
 	    if 'client' in locals() and 'phone' in locals():
-	        print('{0}:"{1}: Te recordamos que tienes una cita en Piezzo"'.format(phone, client))
+	        print('{0}:"Hola, Te recordamos que hoy tienes cita con nosotros, nos dara gusto verte, Clinica Piezzo"'.format(phone, client))
 
 
 if __name__ == '__main__':
