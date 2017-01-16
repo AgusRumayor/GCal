@@ -60,13 +60,12 @@ def main():
     service = discovery.build('calendar', 'v3', http=http)
 
     remember_hours =2
-    #From this time to 1 hour later - 5 minutes (trying avoid duplicates messages
+    #From this time to remember_hour later - 5 minutes (trying avoid duplicates messages
     now = datetime.datetime.utcnow() + datetime.timedelta(hours=remember_hours)
     now_1_hour = now+datetime.timedelta(hours=1) - datetime.timedelta(minutes=5)
-    #now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     now = now.isoformat() + 'Z'
     now_1_hour = now_1_hour.isoformat() +'Z'
-    
+    #ADD more calendars
     calendars = ['a1nvjeb8qbs6d496aeo84i43r8@group.calendar.google.com']
     events = []
     for calendar in calendars:
