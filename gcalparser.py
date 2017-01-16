@@ -59,19 +59,15 @@ def main():
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
 
-    remember_hours =1
+    remember_hours =2
     #From this time to 1 hour later - 5 minutes (trying avoid duplicates messages
     now = datetime.datetime.utcnow() + datetime.timedelta(hours=remember_hours)
-    now_1_hour = now+datetime.timedelta(hours=remember_hours) - datetime.timedelta(minutes=5)
+    now_1_hour = now+datetime.timedelta(hours=1) - datetime.timedelta(minutes=5)
     #now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     now = now.isoformat() + 'Z'
     now_1_hour = now_1_hour.isoformat() +'Z'
     
-    calendars = ['ad8kj3tgp3udd0unsvrde4p5hc8gs01p@import.calendar.google.com', 
-                 '84v648v1lo7sp9dqrj8egfe8b6m9qg83@import.calendar.google.com', 
-		 '30qd3ak2qrk0leu1sjl7rb72jf55r4bt@import.calendar.google.com', 
-		 '9trsej2tkp3t4jtp51i602ifce6sep2u@import.calendar.google.com',
-		 'a1nvjeb8qbs6d496aeo84i43r8@group.calendar.google.com']
+    calendars = ['a1nvjeb8qbs6d496aeo84i43r8@group.calendar.google.com']
     events = []
     for calendar in calendars:
     	eventsResult = service.events().list(
@@ -88,8 +84,8 @@ def main():
 	    	    client= (detail.split(':')[1]).strip()
 		if "Phone:" in detail:
 		    phone= (detail.split(':')[1]).strip()
-	    if 'client' in locals() and 'phone' in locals():
-	        print('{0}:"Hola, Te recordamos que hoy tienes cita con nosotros, nos dara gusto verte, Clinica Piezzo"'.format(phone, client))
+	    if 'phone' in locals():
+	        print('{0}:"Hola, Te recordamos que hoy tienes cita con nosotros"'.format(phone))
 
 
 if __name__ == '__main__':
