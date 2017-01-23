@@ -62,7 +62,8 @@ def main():
     remember_hours =2
     #From this time to remember_hour later - 5 minutes (trying avoid duplicates messages
     now = datetime.datetime.utcnow() + datetime.timedelta(hours=remember_hours)
-    now_1_hour = now+datetime.timedelta(hours=1) - datetime.timedelta(minutes=5)
+    now = now.replace(minute=0, second=0, microsecond=0)
+    now_1_hour = now+datetime.timedelta(hours=1) - datetime.timedelta(minutes=1)
     now = now.isoformat() + 'Z'
     now_1_hour = now_1_hour.isoformat() +'Z'
     #ADD more calendars
